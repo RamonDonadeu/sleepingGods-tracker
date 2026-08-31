@@ -47,7 +47,7 @@ O todo con Docker:
 docker compose up --build
 ```
 
-La UI queda en `http://localhost` y llama a la API por `/api`.
+La UI queda en `http://localhost:8080` y llama a la API por `/api`.
 
 ## Despliegue en Dokploy
 
@@ -59,10 +59,9 @@ La UI queda en `http://localhost` y llama a la API por `/api`.
 ```
 DATABASE_URL=file:/data/sleeping-gods.db
 PORT=3000
-WEB_PORT=80
 ```
 
-La base SQLite se guarda en el volumen `sleeping_gods_data`. Al arrancar, el backend aplica migraciones y carga el catálogo de tótems.
+No publiques el puerto `80` en el host: Dokploy ya lo usa. La base SQLite se guarda en el volumen `sleeping_gods_data`. Al arrancar, el backend aplica migraciones y carga el catálogo de tótems.
 
 ## API
 

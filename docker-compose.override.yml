@@ -1,0 +1,5 @@
+# Local development only. Docker Compose loads this automatically; Dokploy uses docker-compose.yml.
+services:
+  frontend:
+    ports:
+      - "${WEB_PORT:-8080}:80"
