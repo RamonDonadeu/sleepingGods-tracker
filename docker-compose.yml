@@ -23,7 +23,7 @@ services:
       backend:
         condition: service_healthy
     expose:
-      - "80"
+      - "443"
 
 volumes:
   sleeping_gods_data:
