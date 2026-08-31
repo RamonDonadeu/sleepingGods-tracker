@@ -235,6 +235,7 @@ export class KnowledgeService {
         destination?: string;
         stat?: string;
         value?: number;
+        success?: OptionBranchMetadata;
         successKind?: string;
         successReward?: string;
         successDestination?: string;
@@ -260,7 +261,7 @@ export class KnowledgeService {
       const children =
         challengeChildren.length > 0 ? challengeChildren : optionFailures;
       const successDestination =
-        (meta.success as OptionBranchMetadata | undefined)?.destination ??
+        meta.success?.destination ??
         meta.successDestination ??
         meta.destination ??
         undefined;
