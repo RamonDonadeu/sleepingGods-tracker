@@ -1,0 +1,155 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum CampaignStatus {
+  ACTIVE
+  COMPLETED
+}
+
+enum LocationStatus {
+  NOT_VISITED
+  VISITED
+  PENDING
+}
+
+model Campaign {
+  id               String         @id @default(cuid())
+  name             String
+  startedAt        DateTime       @default(now())
+  endedAt          DateTime?
+  status           CampaignStatus @default(ACTIVE)
+  notes            String?
+  players          String?
+  didTutorial      Boolean        @default(false)
+  startingKeyword1 String?
+  startingKeyword2 String?
+
+  campaignLocations CampaignLocation[]
+  visits            CampaignVisit[]
+  knowledgeEntries  KnowledgeEntry[]
+  totemStatuses     CampaignTotemStatus[]
+  keywordUsages     KeywordUsage[]
+}
+
+model Location {
+  id     String  @id @default(cuid())
+  number String  @unique
+  name   String?
+
+  campaignLocations CampaignLocation[]
+  knowledgeEntries  KnowledgeEntry[]
+  visits            CampaignVisit[]
+  keywordUsages     KeywordUsage[]
+}
+
+model CampaignLocation {
+  id         String         @id @default(cuid())
+  campaignId String
+  locationId String
+  status     LocationStatus @default(NOT_VISITED)
+  visitedAt  DateTime?
+  notes      String?
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, locationId])
+}
+
+model CampaignVisit {
+  id         String   @id @default(cuid())
+  campaignId String
+  locationId String
+  visitedAt  DateTime @default(now())
+  notes      String?
+  choices    String?
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+}
+
+enum KnowledgeEntryType {
+  REQUIRED_KEYWORD
+  ACCESS
+  MANDATORY_EVENT
+  OPTION
+  OPTION_GOTO
+  OPTION_STAT_TEST
+  OPTION_REWARD
+  OPTION_TOTEM
+  FAILURE_LOCATION
+  REWARD
+  OUTCOME
+  COMBAT
+  RESOURCE
+  KEYWORD_DISCOVERY
+  TOTEM
+  NOTE
+}
+
+model KnowledgeEntry {
+  id         String             @id @default(cuid())
+  locationId String
+  campaignId String
+  parentId   String?
+  type       KnowledgeEntryType
+  content    String
+  metadata   String?
+
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  parent   KnowledgeEntry?  @relation("KnowledgeTree", fields: [parentId], references: [id])
+  children KnowledgeEntry[] @relation("KnowledgeTree")
+}
+
+model Keyword {
+  id                     String   @id @default(cuid())
+  word                   String   @unique
+  discoveredAt           DateTime @default(now())
+  discoveredInCampaignId String?
+  discoveredAtLocationId String?
+
+  usages KeywordUsage[]
+}
+
+model KeywordUsage {
+  id         String   @id @default(cuid())
+  keywordId  String
+  campaignId String?
+  locationId String?
+  notes      String?
+  usedAt     DateTime @default(now())
+
+  keyword  Keyword   @relation(fields: [keywordId], references: [id], onDelete: Cascade)
+  campaign Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  location Location? @relation(fields: [locationId], references: [id], onDelete: SetNull)
+}
+
+model Totem {
+  id                     String  @id @default(cuid())
+  name                   String  @unique
+  discovered             Boolean @default(false)
+  discoveredInCampaignId String?
+  discoveredAtLocationId String?
+  notes                  String?
+
+  campaignStatuses CampaignTotemStatus[]
+}
+
+model CampaignTotemStatus {
+  id         String  @id @default(cuid())
+  campaignId String
+  totemId    String
+  obtained   Boolean @default(false)
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  totem    Totem    @relation(fields: [totemId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, totemId])
+}
