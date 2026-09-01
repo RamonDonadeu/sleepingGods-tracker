@@ -47,13 +47,13 @@ O todo con Docker:
 docker compose up --build
 ```
 
-La UI queda en `http://localhost:443` y llama a la API por `/api`.
+La UI queda en `http://localhost:8080` y llama a la API por `/api`.
 
 ## Despliegue en Dokploy
 
 1. Crea un servicio **Compose** apuntando a este repositorio.
 2. Compose file: `docker-compose.yml`.
-3. En **Domains**, asigna el dominio al servicio `frontend` (puerto `443`), no al backend.
+3. En **Domains**, asigna el dominio al servicio `frontend` en el puerto interno `80` (no al backend).
 4. Opcional en Environment:
 
 ```
@@ -61,7 +61,7 @@ DATABASE_URL=file:/data/sleeping-gods.db
 PORT=3000
 ```
 
-No publiques el puerto `443` en el host: Dokploy ya lo usa. La base SQLite se guarda en el volumen `sleeping_gods_data`. Al arrancar, el backend aplica migraciones y carga el catálogo de tótems.
+No publiques puertos en el host (`80`/`443`): Dokploy ya los usa. El contenedor `frontend` escucha en `80` y nginx reenvía `/api/*` al backend. La base SQLite se guarda en el volumen `sleeping_gods_data`.
 
 ## API
 
