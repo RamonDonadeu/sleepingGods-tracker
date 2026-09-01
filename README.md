@@ -61,7 +61,7 @@ DATABASE_URL=file:/data/sleeping-gods.db
 PORT=3000
 ```
 
-No publiques puertos en el host (`80`/`443`): Dokploy ya los usa. El contenedor `frontend` escucha en `80` y nginx reenvía `/api/*` al backend. La base SQLite se guarda en el volumen `sleeping_gods_data`.
+No publiques puertos en el host (`80`/`443`): Dokploy ya los usa. Asigna **un solo dominio** al servicio `frontend` (puerto `80`); no expongas el backend por separado. La base SQLite se guarda en el volumen `sleeping_gods_data`.
 
 ## API
 
