@@ -53,15 +53,19 @@ La UI queda en `http://localhost:8080` y llama a la API por `/api`.
 
 1. Crea un servicio **Compose** apuntando a este repositorio.
 2. Compose file: `docker-compose.yml`.
-3. En **Domains**, asigna el dominio al servicio `frontend` en el puerto interno `80` (no al backend).
-4. Opcional en Environment:
+3. En **Domains**, asigna el dominio solo al servicio `frontend` en el puerto interno `80`.
+4. No añadas dominios al servicio `backend`.
+5. Usa **Preview Compose** antes de desplegar y comprueba que solo `frontend` tiene labels de Traefik.
+6. Opcional en Environment:
 
 ```
 DATABASE_URL=file:/data/sleeping-gods.db
 PORT=3000
 ```
 
-No publiques puertos en el host (`80`/`443`): Dokploy ya los usa. Asigna **un solo dominio** al servicio `frontend` (puerto `80`); no expongas el backend por separado. La base SQLite se guarda en el volumen `sleeping_gods_data`.
+No publiques puertos en el host (`80`/`443`): Dokploy ya los usa. La base SQLite se guarda en el volumen `sleeping_gods_data`.
+
+Si ves respuestas alternas (una OK y otra fallo) al recargar `/api/health`, suele ser Traefik enrutando a veces al `backend` por redes Docker mezcladas. Este compose desactiva Traefik en `backend` para que solo `frontend` reciba tráfico público.
 
 ## API
 
