@@ -65,4 +65,4 @@ No publiques puertos en el host (`80`/`443`): Dokploy ya los usa. Asigna **un so
 
 ## API
 
-El frontend usa `VITE_API_URL` (por defecto `/api`). En Docker, nginx reenvía `/api/*` al backend.
+El frontend usa `VITE_API_URL` (por defecto `/api`). En Docker, nginx reenvía `/api` al backend sin modificar la ruta.
