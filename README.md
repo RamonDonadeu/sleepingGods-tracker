@@ -53,7 +53,7 @@ La UI queda en `http://localhost:443` y llama a la API por `/api`.
 
 1. Crea un servicio **Compose** apuntando a este repositorio.
 2. Compose file: `docker-compose.yml`.
-3. En **Domains**, asigna el dominio al servicio `frontend` (puerto `443`).
+3. En **Domains**, asigna el dominio al servicio `frontend` (puerto `443`), no al backend.
 4. Opcional en Environment:
 
 ```
